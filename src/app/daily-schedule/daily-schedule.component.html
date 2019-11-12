@@ -1,0 +1,66 @@
+<div class="caption is-size-3">
+    Daily Schedule by Location
+</div>
+<div style="margin: auto; padding: 20px; width: 80%;">
+    <div class="span_table">
+        <div class="row">
+            <span style="width: 35%; border-bottom: 0; padding-top: 30px;" class="cell has-background-grey-lighter">
+                <div class="container has-background-grey-lighter">
+                    Pick Location
+                </div>
+            </span>
+            <span style="width: 65%; border-bottom: 0; border: 3px solid #DBDBDB; padding-bottom: 10px;" class="cell">
+                <div class="select" (change) = "changeLocation($event)">
+                    <select id="locSelect">
+                        <option value="">-- Select Location --</option>
+                        <option *ngFor="let l of locations" [value]="l.facilityId">
+                            {{l.facilityName}}
+                        </option>
+                    </select>
+                </div>
+            </span>
+        </div>
+    </div>
+</div>
+<div *ngIf="isHidden">
+    <div class="caption is-size-3">
+        {{currentLocation}}
+    </div>
+    <div style="margin: auto; padding: 20px; width: 80%;">
+        <div class="span_table">
+            <div class="row">
+                <span style="width: 12%;" class="cell has-background-grey-lighter">
+                    Name
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Type
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Monday
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Tuesday
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Wednesday
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Thursday
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Friday
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Saturday
+                </span>
+                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                    Sunday
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
