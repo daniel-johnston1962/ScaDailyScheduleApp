@@ -7,9 +7,17 @@ export class Location {
   facilityName: string;
 }
 
-// export class data {
-//   location: Location[];
-// }
+export class Schedule {
+  teammateName: string;
+  teammateType: string;
+  monday: string;
+  tuesday: string;
+  wednesday: string;
+  thursday: string;
+  friday: string;
+  saturday: string;
+  sunday: string;
+}
 
 @Component({
   selector: 'app-daily-schedule',
@@ -20,10 +28,12 @@ export class Location {
 export class DailyScheduleComponent implements OnInit {
 
   public locations: Location[];
+  public schedules: Schedule[];
   public errorMessage: string = '';
   public currentLocation: string = '';
-  public isHidden: boolean = false;
-  public removeSelect: boolean = false; 
+  public facilityID: string = '';
+  public weekdayNum: string = ''; 
+  public isHidden: boolean = false; 
 
   constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService) { }
 
@@ -33,7 +43,7 @@ export class DailyScheduleComponent implements OnInit {
 
   
   public getLocations(){
-    let apiAddress: string = "api/Locations";
+    let apiAddress: string = 'api/Locations';
     this.repository.getData(apiAddress)
       .subscribe((res: any) => {
         this.locations = res.data as Location[];
@@ -47,20 +57,41 @@ export class DailyScheduleComponent implements OnInit {
 
   public changeLocation($event) {
 
-    if (this.removeSelect === false) {
-      this.removeSelectElement();
+    if (this.isHidden === false) {
+      this.firstTimeSelecting();
     }
 
-    let fID = $event.target.value;
-    this.isHidden = true;
-    this.currentLocation = this.locations.find(x => x.facilityId == fID).facilityName;
-
+    this.facilityID = $event.target.value;
+    this.currentLocation = this.locations.find(x => x.facilityId === this.facilityID).facilityName;
+    if (this.weekdayNum !== '') {
+      this.getSchedule();
+    }
   }
 
-  private removeSelectElement() {
+  public selectDate($event) {
+    let d = new Date($event.target.value);
+    this.weekdayNum = d.getUTCDay().toString();
+    this.getSchedule();
+  }
+
+  private getSchedule() {
+    let apiAddress: string = `api/Schedules/{this.facilityID}/{weekdayNum}`;
+    this.repository.getData(apiAddress)
+      .subscribe((res: any) => {
+        this.schedules = res.data as Schedule[];
+      },
+      (error) => {
+        this.errorHandler.handleError(error);
+        this.errorMessage = this.errorHandler.errorMessage;
+      })
+  }
+
+  private firstTimeSelecting() {
+    // remove first select element
     var ls = document.getElementById("locSelect");
     var s = ls.firstChild;
     s.remove();
-    this.removeSelect = true;
+
+    this.isHidden = true;
   }
 }

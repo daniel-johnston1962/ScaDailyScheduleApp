@@ -26,35 +26,76 @@
     <div class="caption is-size-3">
         {{currentLocation}}
     </div>
-    <div style="margin: auto; padding: 20px; width: 80%;">
+    <div style="margin: auto; padding: 20px; width: 50%;">
         <div class="span_table">
             <div class="row">
-                <span style="width: 12%;" class="cell has-background-grey-lighter">
+                <span class="cell">
+                    Week Start Date:
+                </span>
+                <span class="cell">
+                    <input type="date" (change) = "selectDate($event)" />
+                </span>
+            </div>
+        </div>
+    </div>
+    <div style="margin: auto; padding: 20px; width: 80%;">
+        <div class="span_table">
+            <div class="header-row row">
+                <span class="cell">
                     Name
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Type
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Monday
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Tuesday
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Wednesday
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Thursday
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Friday
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Saturday
                 </span>
-                <span style="width: 11%;" class="cell has-background-grey-lighter">
+                <span class="cell">
                     Sunday
+                </span>
+            </div>
+            <div class="row" *ngFor="let schedule of schedules">
+                <span style="width: 12%;" class="cell">
+                    {{schedule.teammateName}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.teammateType}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.monday}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.tuesday}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.wednesday}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.thursday}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.friday}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.saturday}}
+                </span>
+                <span style="width: 11%;" class="cell">
+                    {{schedule.sunday}}
                 </span>
             </div>
         </div>
