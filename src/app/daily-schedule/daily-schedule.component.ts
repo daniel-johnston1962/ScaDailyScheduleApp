@@ -19,6 +19,16 @@ export class Schedule {
   sunday: string;
 }
 
+class AnesthesiaOff {
+  monday: number = 0;
+  tuesday: number = 0;
+  wednesday: number = 0;
+  thursday: number = 0;
+  friday: number = 0;
+  saturday: number = 0;
+  sunday: number = 0;
+}
+
 @Component({
   selector: 'app-daily-schedule',
   templateUrl: './daily-schedule.component.html',
@@ -29,6 +39,7 @@ export class DailyScheduleComponent implements OnInit {
 
   public locations: Location[];
   public schedules: Schedule[];
+  public anesthesiaMessage: string = '';
   public errorMessage: string = '';
   public currentLocation: string = '';
   public facilityID: string = '';
@@ -75,16 +86,52 @@ export class DailyScheduleComponent implements OnInit {
   }
 
   private getSchedule() {
-    let apiAddress: string = `api/Schedules/{this.facilityID}/{weekdayNum}`;
+    let apiAddress: string = `api/Schedules/{this.facilityID}/{this.weekdayNum}`;
     this.repository.getData(apiAddress)
       .subscribe((res: any) => {
         this.schedules = res.data as Schedule[];
+        this.createMessage();
       },
       (error) => {
         this.errorHandler.handleError(error);
         this.errorMessage = this.errorHandler.errorMessage;
       })
   }
+
+  private createMessage() {
+    let anesthesiaList = this.schedules.filter(x => x.teammateType.trim().toLowerCase() === 'anesthesia');
+
+    let anesthesiaOffList = new AnesthesiaOff();
+    anesthesiaOffList.monday = anesthesiaList.filter(x => x.monday !== 'OFF').length;
+    anesthesiaOffList.tuesday = anesthesiaList.filter(x => x.tuesday !== 'OFF').length;
+    anesthesiaOffList.wednesday = anesthesiaList.filter(x => x.wednesday !== 'OFF').length;
+    anesthesiaOffList.thursday = anesthesiaList.filter(x => x.thursday !== 'OFF').length;
+    anesthesiaOffList.friday = anesthesiaList.filter(x => x.friday !== 'OFF').length;
+    anesthesiaOffList.saturday = anesthesiaList.filter(x => x.saturday !== 'OFF').length;
+    anesthesiaOffList.sunday = anesthesiaList.filter(x => x.sunday !== 'OFF').length;
+
+    var message = '';
+			
+    message += this.showmessage('Monday', anesthesiaOffList.monday);
+    message += this.showmessage('Tuesday', anesthesiaOffList.tuesday);
+    message += this.showmessage('Wednesday', anesthesiaOffList.wednesday);
+    message += this.showmessage('Thursday', anesthesiaOffList.thursday);
+    message += this.showmessage('Friday', anesthesiaOffList.friday);
+    message += this.showmessage('Saturday', anesthesiaOffList.saturday);
+
+    this.anesthesiaMessage = message;
+  }
+
+  private showmessage(day: string, count: number) {
+		if (count < 2)
+		{
+			return '<div>Not enough Anesthesiologists scheduled for ' + day + '</div>';
+		}
+		else
+		{
+			return '';
+		}
+	};
 
   private firstTimeSelecting() {
     // remove first select element
