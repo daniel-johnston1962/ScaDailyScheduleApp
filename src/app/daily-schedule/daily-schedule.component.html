@@ -100,13 +100,14 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="notification" *ngFor="let kv of kvAnesthesiaOff">
-            <div>Not enough Anesthesiologists scheduled for {{kv.key}}</div>
+    <div *ngIf="isWarningHidden" class="container">
+        <div class="notification has-text-danger">
+            <strong>Warning:<br/></strong>
+            <ul>
+                <li *ngFor="let kv of kvAnesthesiaOff" style="list-style-type:none;">
+                    Not enough Anesthesiologists scheduled for {{kv.key}}
+                </li>
+            </ul>
         </div>
     </div>
 </div>
-
-
-
-

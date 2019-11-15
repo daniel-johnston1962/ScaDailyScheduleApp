@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RepositoryService } from '../shared/services/repository.service';
 import { ErrorHandlerService } from '../shared/services/error-handler.service';
-import { Key } from 'protractor';
 
 export class Location {
   facilityId: string;
@@ -20,15 +19,15 @@ export class Schedule {
   sunday: string;
 }
 
-export class AnesthesiaOff {
-  monday: number = 0;
-  tuesday: number = 0;
-  wednesday: number = 0;
-  thursday: number = 0;
-  friday: number = 0;
-  saturday: number = 0;
-  sunday: number = 0;
-}
+// export class AnesthesiaOff {
+//   monday: number = 0;
+//   tuesday: number = 0;
+//   wednesday: number = 0;
+//   thursday: number = 0;
+//   friday: number = 0;
+//   saturday: number = 0;
+//   sunday: number = 0;
+// }
 
 export class KVAnesthesiaOff {
   key: string = '';
@@ -46,7 +45,7 @@ export class DailyScheduleComponent implements OnInit {
 
   public locations: Location[];
   public schedules: Schedule[];
-  public anesthesiaOff: AnesthesiaOff;
+  //public anesthesiaOff: AnesthesiaOff;
   public kvAnesthesiaOff: KVAnesthesiaOff[];
   public anesthesiaMessage: string = '';
   public errorMessage: string = '';
@@ -54,6 +53,7 @@ export class DailyScheduleComponent implements OnInit {
   public facilityID: string = '';
   public weekdayNum: string = ''; 
   public isHidden: boolean = false; 
+  public isWarningHidden: boolean = false;
 
   constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService) { }
 
@@ -99,6 +99,7 @@ export class DailyScheduleComponent implements OnInit {
     this.repository.getData(apiAddress)
       .subscribe((res: any) => {
         this.schedules = res.data as Schedule[];
+        this.isWarningHidden = false;
         this.createKVAList();
       },
       (error) => {
@@ -122,6 +123,10 @@ export class DailyScheduleComponent implements OnInit {
 
     let kvf = kv.filter(x => x.value < 2)
     
+    if (kvf.length > 0) {
+      this.isWarningHidden = true;
+    }
+
     this.kvAnesthesiaOff = kvf;
   }
 
