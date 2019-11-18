@@ -100,23 +100,44 @@ export class DailyScheduleComponent implements OnInit {
   private createKVAList() {
     let anesthesiaList = this.schedules.filter(x => x.teammateType.trim().toLowerCase() === 'anesthesia');
 
-    let kv: KVAnesthesiaOff[] = [
-      { key: 'Monday', value: anesthesiaList.filter(x => x.monday !== 'OFF').length },
-      { key: 'Tuesday', value: anesthesiaList.filter(x => x.tuesday !== 'OFF').length },
-      { key: 'Wednesday', value: anesthesiaList.filter(x => x.wednesday !== 'OFF').length },
-      { key: 'Thursday', value: anesthesiaList.filter(x => x.thursday !== 'OFF').length },
-      { key: 'Friday', value: anesthesiaList.filter(x => x.friday !== 'OFF').length },
-      { key: 'Saturday', value: anesthesiaList.filter(x => x.saturday !== 'OFF').length },
-      { key: 'Sunday', value: anesthesiaList.filter(x => x.sunday !== 'OFF').length }
-    ]
+    var dow = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday"
+    ];
 
-    let kvf = kv.filter(x => x.value < 2)
-    
+    let kv: KVAnesthesiaOff[] = [];
+    let cond: string = 'off'
+
+    for(var i = 0; i < dow.length - 1; i++) {
+      let k: KVAnesthesiaOff = {key: this.capitalize(dow[i]), value: this.countOccurance(anesthesiaList, dow[i], cond)};
+      kv.push(k);
+    }
+
+    let kvf = kv.filter(x => x.value < 2);
+
     if (kvf.length > 0) {
       this.isWarningHidden = true;
     }
 
-    this.kvAnesthesiaOff = kvf;
+   this.kvAnesthesiaOff = kvf;
+  }
+
+  private capitalize(s: string) {
+    return s.charAt(0).toUpperCase() + s.slice(1)
+  }
+
+  private countOccurance(data: Schedule[], day: string, cond: string) {
+    var count = 0;
+    for (var d in data) {
+      if (data[d][day].toLowerCase() !== cond.toLowerCase()) {
+        count++;
+      }
+    }
+    return count;
   }
 
   private firstTimeSelecting() {
