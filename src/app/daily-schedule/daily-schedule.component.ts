@@ -112,8 +112,8 @@ export class DailyScheduleComponent implements OnInit {
     let kv: KVAnesthesiaOff[] = [];
     let cond: string = 'off'
 
-    for(var i = 0; i < dow.length - 1; i++) {
-      let k: KVAnesthesiaOff = {key: this.capitalize(dow[i]), value: this.countOccurance(anesthesiaList, dow[i], cond)};
+    for(var d of dow) {
+      let k: KVAnesthesiaOff = {key: this.capitalize(d), value: this.countOccurance(anesthesiaList, d, cond)};
       kv.push(k);
     }
 
