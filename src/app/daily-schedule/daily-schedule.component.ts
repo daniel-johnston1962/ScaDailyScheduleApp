@@ -132,8 +132,8 @@ export class DailyScheduleComponent implements OnInit {
 
   private countOccurance(data: Schedule[], day: string, cond: string) {
     var count = 0;
-    for (var d in data) {
-      if (data[d][day].toLowerCase() !== cond.toLowerCase()) {
+    for (var d of data) {
+      if (d[day].toLowerCase() !== cond.toLowerCase()) {
         count++;
       }
     }
