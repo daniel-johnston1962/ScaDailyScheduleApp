@@ -2,9 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { RepositoryService } from '../shared/services/repository.service';
 import { ErrorHandlerService } from '../shared/services/error-handler.service';
 
+export class LocationResult {
+  data: Location[];
+}
+
 export class Location {
   facilityId: string;
   facilityName: string;
+}
+
+export class ScheduleResult {
+  data: Schedule[];
 }
 
 export class Schedule {
@@ -51,18 +59,20 @@ export class DailyScheduleComponent implements OnInit {
   }
 
   
-  public getLocations(){
+  public async getLocations(){
     let apiAddress: string = 'api/Locations';
-    this.repository.getData(apiAddress)
-      .subscribe((res: any) => {
-        this.locations = res.data as Location[];
-      },
-      (error) => {
-        this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage;
-      })
-  }
 
+    await this.repository
+              .getDataAsync<LocationResult>(apiAddress)
+              .then(d => {
+                this.locations = d.data;
+              })
+              .catch(error => {
+                this.errorHandler.handleError(error);
+                this.errorMessage = this.errorHandler.errorMessage;
+              });
+  
+  }
 
   public changeLocation($event) {
 
@@ -83,18 +93,19 @@ export class DailyScheduleComponent implements OnInit {
     this.getSchedule();
   }
 
-  private getSchedule() {
+  private async getSchedule() {
     let apiAddress: string = `api/Schedules/{this.facilityID}/{this.weekdayNum}`;
-    this.repository.getData(apiAddress)
-      .subscribe((res: any) => {
-        this.schedules = res.data as Schedule[];
-        this.isWarningHidden = false;
-        this.createKVAList();
-      },
-      (error) => {
-        this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage;
-      })
+
+    await this.repository
+              .getDataAsync<ScheduleResult>(apiAddress)
+              .then(d => {
+                this.schedules = d.data;
+              })
+              .catch(error => {
+                this.errorHandler.handleError(error);
+                this.errorMessage = this.errorHandler.errorMessage;
+              });
+
   }
 
   private createKVAList() {
