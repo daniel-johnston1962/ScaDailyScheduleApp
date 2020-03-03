@@ -60,18 +60,14 @@ export class DailyScheduleComponent implements OnInit {
 
   
   public async getLocations(){
-    let apiAddress: string = 'api/Locations';
-
-    await this.repository
-              .getDataAsync<LocationResult>(apiAddress)
-              .then(d => {
-                this.locations = d.data;
-              })
-              .catch(error => {
-                this.errorHandler.handleError(error);
-                this.errorMessage = this.errorHandler.errorMessage;
-              });
-  
+    try {
+      let apiAddress: string = 'api/Locations';
+      const res = await this.repository.getDataAsync<LocationResult>(apiAddress);
+      this.locations = res.data;
+    } catch (err) {
+      this.errorHandler.handleError(err);
+      this.errorMessage = this.errorHandler.errorMessage;
+    }
   }
 
   public changeLocation($event) {
@@ -94,18 +90,14 @@ export class DailyScheduleComponent implements OnInit {
   }
 
   private async getSchedule() {
-    let apiAddress: string = `api/Schedules/{this.facilityID}/{this.weekdayNum}`;
-
-    await this.repository
-              .getDataAsync<ScheduleResult>(apiAddress)
-              .then(d => {
-                this.schedules = d.data;
-              })
-              .catch(error => {
-                this.errorHandler.handleError(error);
-                this.errorMessage = this.errorHandler.errorMessage;
-              });
-
+    try {
+      let apiAddress: string = `api/Schedules/${this.facilityID}/${this.weekdayNum}`;
+      const res = await this.repository.getDataAsync<ScheduleResult>(apiAddress);
+      this.schedules = res.data;
+    } catch (err) {
+      this.errorHandler.handleError(err);
+      this.errorMessage = this.errorHandler.errorMessage;
+    }
   }
 
   private createKVAList() {
